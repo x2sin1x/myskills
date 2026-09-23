@@ -1,8 +1,8 @@
 # 自用 Skills 仓库
 
-该仓库包含了我个人使用的一组 Codex / Claude Code 技能，覆盖学术检索与论文速读、科研配图、每日 AI 资讯、读书拆解、代码库入门与源码讲解、技能发现与安装、Markdown 中英混排校对、Beamer / Slidev 演示文稿、东南大学学术汇报、思源笔记与 Hugo 内容同步、思源笔记与 VitePress 内容同步、技术栈入门与系统教程，以及 B 站缓存转换等场景。
+该仓库包含了我个人使用的一组 Codex / Claude Code 技能，覆盖学术检索、论文速读与博客化解读、科研配图、每日 AI 资讯、读书拆解、代码库入门与源码讲解、技能发现与安装、Markdown 中英混排校对、Beamer / Slidev 演示文稿、东南大学学术汇报、思源笔记与 Hugo 内容同步、思源笔记与 VitePress 内容同步、技术栈入门与系统教程，以及 B 站缓存转换等场景。
 
-当前共包含 19 个技能，统一放在 `skills/` 目录下。每个技能都是一个独立目录，包含必需的 `SKILL.md`，以及可选的 `agents/openai.yaml`、参考资料、脚本或素材。该布局符合 Agent Skills 规范，可直接通过 `npx skills add` 安装。
+当前共包含 20 个技能，统一放在 `skills/` 目录下。每个技能都是一个独立目录，包含必需的 `SKILL.md`，以及可选的 `agents/openai.yaml`、参考资料、脚本或素材。该布局符合 Agent Skills 规范，可直接通过 `npx skills add` 安装。
 
 ## 技能列表
 
@@ -17,6 +17,7 @@
 | [drawio-diagram-builder](./skills/drawio-diagram-builder/) | 创建、复刻和迭代优化可编辑的 draw.io 科研与技术图示 | 否 |
 | [find-skills](./skills/find-skills/) | 帮助发现和安装开放技能生态中的 Agent Skills，适合在需要扩展能力、查找已有工作流或推荐可安装技能时使用 | 否 |
 | [markdown-cjk-spacing](./skills/markdown-cjk-spacing/) | 检查并修正 Markdown 或纯文本中的中文与英文、ASCII 术语混排间距，以及中英文标点和加粗文本邻近标点的排版细节 | 否 |
+| [paper-blog-writer](./skills/paper-blog-writer/) | 将学术论文改写为问题驱动、机制清晰、证据闭环的技术博客或研究项目介绍页 | 否 |
 | [paper-quickread](./skills/paper-quickread/) | 对本地 PDF 或论文 URL 进行中文速读，重建研究动机、核心思路和验证证据链，并可为 arXiv 论文提取关键原图 | 否 |
 | [parse-bilibili](./skills/parse-bilibili/) | 解析 B 站 Android/PC 客户端缓存的 `.m4s` 文件，导出 MP4 视频或纯音频 | 否 |
 | [repo-source-explainer](./skills/repo-source-explainer/) | 基于源码证据生成架构导览、模块深度讲解、代码阅读指南或书籍式文档 | 否 |
