@@ -28,7 +28,9 @@ Do not expand a focused request into a full book without the user's direction. P
   ```markdown
   > Source: `path/to/file.py#L10-L42` (`SymbolName`)
   ```
-- Prefer small, representative excerpts. Explain why code exists, what contract it enforces, and how callers depend on it instead of paraphrasing every line.
+- When prose points to an important implementation with `path:line`, place a short excerpt of its core logic next to the explanation so readers can understand the mechanism without leaving the page. Keep enough context for the code to make sense, and mark omissions clearly; do not splice together code that does not exist in the source.
+- The excerpt itself does not need a repeated version label or source link. Keep the analyzed revision in the guide's front matter and use nearby path/line references for traceability. Add a source link only when it materially helps navigation or the user asks for one.
+- Prefer small, representative excerpts. Explain what the code does, why it exists, what contract it enforces, and how callers depend on it instead of paraphrasing every line or dumping large source blocks. Not every path citation needs an excerpt; prioritize the implementations that carry the chapter's main explanation.
 
 For a supervised comparison, treat the reference book as a second, versioned
 evidence set rather than as an answer key. Record its repository revision and

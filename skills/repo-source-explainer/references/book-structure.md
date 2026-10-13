@@ -49,6 +49,7 @@ Prefer Mermaid when the target renderer supports it; otherwise use a compact ASC
 ## Writing Quality
 
 - Lead with the mechanism and its motivation, then descend into code.
+- For an important implementation described with a `path:line` citation, put a concise excerpt of the core logic beside that explanation. Keep the excerpt faithful to the analyzed source; mark omissions, and avoid adding version labels or source links beside each excerpt unless they help the reader or were requested.
 - Keep terminology consistent with the repository and define overloaded terms.
 - Explain code in context; avoid long excerpts and line-by-line narration.
 - Separate current behavior from history and future plans.
