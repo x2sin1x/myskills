@@ -7,7 +7,6 @@ SiYuan API Client - Production Grade
 import json
 import logging
 import time
-import yaml
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
 from urllib.request import Request, urlopen
@@ -52,24 +51,18 @@ class SiYuanClient:
     - Config file support
     """
     
-    DEFAULT_CONFIG_PATHS = [
-        Path.home() / ".openclaw" / "workspace" / "skills" / "siyuan" / "config.yaml",
-        Path(__file__).parent / "config.yaml",
-    ]
-    
     def __init__(
         self,
         base_url: str = None,
         token: str = None,
         timeout: int = 30,
         retry: int = 3,
-        verify_ssl: bool = True,
-        config_path: Path = None
+        verify_ssl: bool = True
     ):
         """
         Initialize SiYuan client.
         
-        Priority: explicit args > config file > defaults
+        Defaults to the local SiYuan API at http://127.0.0.1:6806.
         
         Args:
             base_url: SiYuan API base URL (e.g., "http://127.0.0.1:6806")
@@ -77,39 +70,14 @@ class SiYuanClient:
             timeout: Request timeout in seconds
             retry: Number of retry attempts
             verify_ssl: Whether to verify SSL certificates
-            config_path: Path to config YAML file
         """
-        # Load config from file if exists
-        config = self._load_config(config_path)
-        
-        # Set attributes with priority: explicit > config > default
-        self.base_url = (base_url or config.get('base_url', "http://127.0.0.1:6806")).rstrip('/')
-        self.token = token or config.get('token')
-        self.timeout = timeout or config.get('timeout', 30)
-        self.retry = retry or config.get('retry', 3)
-        self.verify_ssl = verify_ssl if verify_ssl is not None else config.get('verify_ssl', True)
-        
-        if not self.token:
-            raise SiYuanError("API token is required. Provide it explicitly or in config.yaml")
+        self.base_url = (base_url or "http://127.0.0.1:6806").rstrip('/')
+        self.token = token
+        self.timeout = timeout
+        self.retry = retry
+        self.verify_ssl = verify_ssl if verify_ssl is not None else True
         
         logger.info(f"Initialized SiYuan client: {self.base_url}")
-    
-    def _load_config(self, config_path: Path = None) -> Dict[str, Any]:
-        """Load configuration from YAML file"""
-        paths = [config_path] if config_path else self.DEFAULT_CONFIG_PATHS
-        
-        for path in paths:
-            if path and path.exists():
-                try:
-                    with open(path, 'r', encoding='utf-8') as f:
-                        config = yaml.safe_load(f)
-                        if config and 'siyuan' in config:
-                            logger.debug(f"Loaded config from {path}")
-                            return config['siyuan']
-                except Exception as e:
-                    logger.warning(f"Failed to load config from {path}: {e}")
-        
-        return {}
     
     def _make_request(
         self,
@@ -134,10 +102,11 @@ class SiYuanClient:
         """
         url = urljoin(self.base_url + "/", endpoint)
         headers = {
-            "Authorization": f"Token {self.token}",
             "Content-Type": "application/json",
             "Accept": "application/json"
         }
+        if self.token:
+            headers["Authorization"] = f"Token {self.token}"
         
         payload = json.dumps(data or {}).encode('utf-8')
         last_error = None
@@ -623,9 +592,10 @@ class SiYuanClient:
         payload = b'\r\n'.join(body)
         
         headers = {
-            "Authorization": f"Token {self.token}",
             "Content-Type": f"multipart/form-data; boundary={boundary}"
         }
+        if self.token:
+            headers["Authorization"] = f"Token {self.token}"
         
         last_error = None
         for attempt in range(self.retry):
@@ -966,9 +936,9 @@ class SiYuanClient:
             File bytes on success, or error dict on failure
         """
         url = urljoin(self.base_url + "/", "api/file/getFile")
-        headers = {
-            "Authorization": f"Token {self.token}"
-        }
+        headers = {"Content-Type": "application/json"}
+        if self.token:
+            headers["Authorization"] = f"Token {self.token}"
         
         import urllib.request
         req = urllib.request.Request(url, data=json.dumps({"path": path}).encode(), 
@@ -1041,9 +1011,10 @@ class SiYuanClient:
         payload = b'\r\n'.join(body)
         
         headers = {
-            "Authorization": f"Token {self.token}",
             "Content-Type": f"multipart/form-data; boundary={boundary}"
         }
+        if self.token:
+            headers["Authorization"] = f"Token {self.token}"
         
         req = URLRequest(url, data=payload, headers=headers, method="POST")
         with urlopen(req, timeout=self.timeout) as response:

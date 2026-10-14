@@ -91,7 +91,7 @@
 
 ### Authentication
 
-View API token in <kbd>Settings - About</kbd>, request header: `Authorization: Token xxx`
+For local use, delete/clear the API token in the authentication section of SiYuan's settings. The bundled client omits the `Authorization` header when no token is configured.
 
 ## Notebooks
 

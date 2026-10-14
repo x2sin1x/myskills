@@ -16,7 +16,7 @@ Choose the access method from the runtime environment:
 1. Identify the runtime platform before selecting an access method. Do not classify WSL as native Windows.
 2. Honor an access method explicitly requested by the user.
 3. On native Windows, read `CLI.md`, then probe `Get-Command siyuan`, `siyuan --help`, and `siyuan --format json workspace info`.
-4. On Linux and WSL, start with the API/Python section below. Confirm Python 3 is available, SiYuan is running with API access enabled, and `config.yaml` points to the reachable service address.
+4. On Linux and WSL, start with the API/Python section below. Confirm Python 3 is available and SiYuan is running with API access enabled. The default API port is `6806`. In SiYuan's local settings, clear/delete the API token in the authentication section so local API calls can be made without a token.
 5. Before destructive or bulk writes, identify the exact workspace, notebook, document, or block and create a suitable backup or repository snapshot. When using the CLI, also run `--dry-run` before applying the change.
 6. Switch to the non-default path only when the preferred path is unavailable, insufficient for the operation, or superseded by the user's request.
 
@@ -42,35 +42,21 @@ Before destructive or bulk writes, use `--dry-run` and consider `siyuan repo cre
 
 ## API/Python Access (Preferred on Linux and WSL)
 
-Use this as the default path on Linux and WSL. Also use it on another platform when the user explicitly requests HTTP API access or a bundled Python helper is the better fit. The API path requires SiYuan running with API access enabled and a token from **Settings -> About -> API**.
+Use this as the default path on Linux and WSL. Also use it on another platform when the user explicitly requests HTTP API access or a bundled Python helper is the better fit. The API path requires SiYuan running with API access enabled. In SiYuan's local settings, remove the API token from the authentication section; the bundled client then calls the local API without an Authorization header.
 
-On WSL, verify that `base_url` is reachable from the WSL environment. Use `127.0.0.1` only when the Windows-hosted SiYuan service is exposed there; otherwise configure the reachable Windows host address and the current SiYuan API port.
+The default API address is `http://127.0.0.1:6806`. On WSL, verify that this address is reachable from the WSL environment. If SiYuan is hosted on Windows and is not exposed at `127.0.0.1`, pass the reachable Windows host address with port `6806` as `base_url`.
 
 ### Configuration
 
-Create or edit `config.yaml`:
-
-```yaml
-siyuan:
-  base_url: "http://127.0.0.1:6806"  # Check SiYuan settings for actual port
-  token: "your-api-token-here"       # Paste your token here
-```
-
-SiYuan may use different ports on restart, commonly `6806` but sometimes another port. Check the current port in SiYuan settings.
+The bundled client uses port `6806` by default. No configuration file is needed. Pass a different `base_url` only when the service is reachable at another host address.
 
 ### Initialize Client
 
 ```python
 from siyuan_client import SiYuanClient
 
-# Use config.yaml settings
-client = SiYuanClient()
-
-# Or explicit configuration
-client = SiYuanClient(
-    base_url="http://127.0.0.1:6806",
-    token="your-token"
-)
+# Uses http://127.0.0.1:6806 by default
+client = SiYuanClient(base_url="http://127.0.0.1:6806")
 ```
 
 ### System Operations
@@ -413,6 +399,6 @@ python3 tools/update.py --insert "New paragraph" --parent doc-id
 - Native Windows CLI missing: locate `<SiYuan install>/resources/kernel/SiYuan-Kernel` or the platform-specific `siyuan` executable, add it to `PATH`, or invoke the full path. If it remains unavailable, use the Python API path.
 - Wrong workspace: set `SIYUAN_WORKSPACE_PATH` or pass `--workspace`.
 - CLI output hard to parse: add `--format json`.
-- Linux/WSL API connection refused: start SiYuan, enable API access, and verify that the host and port in `config.yaml` are reachable from the current environment.
-- API authentication failed: copy a fresh token from SiYuan settings.
-- API port changed: check the current SiYuan API port and update `config.yaml`.
+- Linux/WSL API connection refused: start SiYuan, enable API access, and verify that the host is reachable on port `6806` from the current environment.
+- API authentication failed: check that the API token has been removed from the authentication section in SiYuan's local settings.
+- API port changed: verify that SiYuan is listening on port `6806`.
