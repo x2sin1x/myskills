@@ -1,4 +1,0 @@
-interface:
-  display_name: "Codebase Onboarding"
-  short_description: "梳理仓库以便更快上手"
-  default_prompt: "使用 $codebase-onboarding 检查一个仓库并生成上手地图。"
